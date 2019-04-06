@@ -1,4 +1,5 @@
 import common.BaseThread;
+import java.util.concurrent.Semaphore;
 
 /**
  * Class Philosopher.
@@ -12,6 +13,10 @@ public class Philosopher extends BaseThread
 	 * Max time an action can take (in milliseconds)
 	 */
 	public static final long TIME_TO_WASTE = 1000;
+
+	private Semaphore tb = new Semaphore(0);
+	private Semaphore mutex = new Semaphore(0);
+	private int sc = 0;
 
 	/**
 	 * The act of eating.
@@ -33,7 +38,7 @@ public class Philosopher extends BaseThread
 		}
 		catch(InterruptedException e)
 		{
-			System.err.println("Philosopher.eat():");
+			System.err.println("Philosopher.eat(): ");
 			DiningPhilosophers.reportException(e);
 			System.exit(1);
 		}
@@ -59,7 +64,7 @@ public class Philosopher extends BaseThread
 		}
 		catch(InterruptedException e)
 		{
-			System.err.println("Philosopher.think():");
+			System.err.println("Philosopher.think(): ");
 			DiningPhilosophers.reportException(e);
 			System.exit(1);
 		}
@@ -90,22 +95,25 @@ public class Philosopher extends BaseThread
 	 * - yield
 	 * - The print that they are done sleeping.
 	 */
-	public void sleep(){
+	public void philSleep() //received but unsure how to implement
+	{
 		try
 		{
-			System.out.println("Philosopher " + this.iTID + " has started SLEEPING"); //TASK 1 announcements and yields
+			System.out.println("Philosopher " + this.getTID() + " has started sleeping");
 			yield();
-			sleep((long)(Math.random() * TIME_TO_WASTE));
+			sleep((long) (Math.random() * TIME_TO_WASTE));
 			yield();
-			System.out.println("Philosopher " + this.iTID + " has stopped SLEEPING");
+			System.out.println("Philosopher " + this.getTID() + " has finished sleeping");
 		}
 		catch(InterruptedException e)
 		{
-			System.err.println("Philosopher.sleep():");
+			System.err.println("Philosopher.sleep(): ");
 			DiningPhilosophers.reportException(e);
 			System.exit(1);
 		}
 	}
+
+
 
 	/**
 	 * No, this is not the act of running, just the overridden Thread.run()
@@ -121,8 +129,6 @@ public class Philosopher extends BaseThread
 			DiningPhilosophers.soMonitor.putDown(getTID()-1);
 
 			think();
-
-			//todo: sleeeeep ??? ??? ?
 
 			/*
 			 * TODO:

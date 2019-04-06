@@ -1,4 +1,6 @@
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Class Monitor
@@ -8,40 +10,34 @@ import java.util.concurrent.locks.Condition;
  */
 public class Monitor
 {
-	private int numPhil = 0;
-
-	public enum status {
-		Hungry,
-		Eating,
-		WantTalk,
-		Talking,
-		Sleeping,
-		Tired,
-		Thinking;
+	private enum status {
+		THINKING,
+		HUNGRY,
+		EATING,
+		EUREKA,
+		TALKING
 	}
-
+	private Lock lock = new ReentrantLock();
 	private status[] state;
-
-	private Condition[] selfEat;
-	private Condition[] selfTalk;
-
+	private Condition[] self;
+	private int nbPhil;
 
 	/**
 	 * Constructor
 	 */
-	public Monitor(int piNumberOfPhilosophers)
+	public Monitor(int nbPhil)
 	{
-		numPhil = piNumberOfPhilosophers;
-		state = new status[piNumberOfPhilosophers];
-		selfEat = new Condition[piNumberOfPhilosophers];
-		selfTalk = new Condition[piNumberOfPhilosophers];
+		this.nbPhil = nbPhil;
+		state = new status[nbPhil];
+		self = new Condition[nbPhil];
 		init();
 		// TODO: set appropriate number of chopsticks based on the # of philosophers
 	}
 
 	private void init(){
-		for(int i = 0; i < numPhil; i++){
-			state[i] = status.Thinking;
+		for(int i = 0; i < state.length; i++){
+			state[i] = status.THINKING;
+			self[i] = lock.newCondition();
 		}
 	}
 
@@ -51,91 +47,103 @@ public class Monitor
 	 * -------------------------------
 	 */
 
+	private int getRight(int id){
+		return (id < nbPhil -1) ? id + 1: 0;
+	}
+
+	private int getLeft(int id){
+		return (id > 0) ? id - 1 : nbPhil - 1;
+	}
+
 	/**
 	 * Grants request (returns) to eat when both chopsticks/forks are available.
 	 * Else forces the philosopher to wait()
 	 */
-	public synchronized void pickUp(final int pIndex) //TASK 2 only eat if you have both forks
+	public void pickUp(final int id) throws InterruptedException//TASK 2 only eat if you have both forks
 	{
-		state[pIndex] = status.Hungry;
-		testEat(pIndex);
-		if(state[pIndex] != status.Eating){
-			try {
-				selfEat[pIndex].wait();
-			} catch (InterruptedException e){
-				System.err.println("Monitor.pickUp():");
-				DiningPhilosophers.reportException(e);
-				System.exit(1);
-			}
+		System.out.println("Philosopher " + id + " will try to pick up");
+		lock.lock();
+		state[id] = status.HUNGRY;
+		testEat(id);
+		if(state[id] != status.EATING){
+			System.out.println("Philosopher " + id + " has is waiting to eat");
+			self[id].await();
 		}
+		lock.unlock();
 	}
 
 	/**
 	 * When a given philosopher's done eating, they put the chopstiks/forks down
 	 * and let others know they are available.
 	 */
-	public synchronized void putDown(final int pIndex) //TASK 2 release your neighbors
+	public void putDown(final int id) //TASK 2 release your neighbors
 	{
-		state[pIndex] = status.Thinking;
-		testEat((pIndex - 1) % numPhil);
-		testEat((pIndex + 1) % numPhil);
+		lock.lock();
+		state[id] = status.THINKING;
+		testEat(getLeft(id));
+		testEat(getRight(id));
+		lock.unlock();
 	}
 
 	/**
 	 * Only one philosopher at a time is allowed to philosophy
 	 * (while she is not eating).
 	 */
-	public synchronized void requestTalk(int pIndex) //TASK 2
+	public void requestTalk(int id) throws InterruptedException//TASK 2
 	{
-		state[pIndex] = status.WantTalk;
-		testTalk(pIndex);
-		if(state[pIndex] != status.Talking)
-		{
-			try {
-				selfTalk[pIndex].wait();
-			} catch (InterruptedException e){
-				System.err.println("Monitor.putDown():");
-				DiningPhilosophers.reportException(e);
-				System.exit(1);
-			}
+		lock.lock();
+		state[id] = status.EUREKA;
+		testTalk(id);
+		if(state[id] != status.TALKING){
+			self[id].await();
 		}
+		lock.unlock();
 	}
 
 	/**
 	 * When one philosopher is done talking stuff, others
 	 * can feel free to start talking.
 	 */
-	public synchronized void endTalk(int pIndex)
+	public synchronized void endTalk(int id) //Task 2
 	{
-		state[pIndex] = status.Thinking;
-		for(int i = 0; i < numPhil; i++){
-			testTalk(i);
-		}
+		lock.lock();
+		state[id] = status.THINKING;
+		testTalk(getLeft(id));
+		testTalk(getRight(id));
+		lock.unlock();
 	}
 
-	private void testEat(int pIndex) //TASK 2 to complete pickUpChopsticks()
-	{
-		System.out.println("in testEat");
-		if(state[pIndex] != status.Eating && state[pIndex] != status.Eating &&
-				state[pIndex] == status.Hungry)
+	public void testEat(int id){  //Task 2
+		lock.lock();
+		if (bothChopsticksFree(id) && state[id] == status.HUNGRY)
 		{
-			state[pIndex] = status.Eating;
-			selfEat[pIndex].signal();
+			System.out.println("Philosopher " + id + " has passes test eat");
+			state[id] = status.EATING;
+			self[id].signal();
 		}
+		lock.unlock();
 	}
 
-	private void testTalk(int pIndex)
-	{
-		boolean okToTalk = true;
-		for (int i = 0; i < numPhil; i++) {
-			okToTalk = okToTalk && (state[i] != status.Sleeping && state[i] != status.Talking);
-			//todo sleeping ??? ?? ??
-		}
+	private boolean bothChopsticksFree(int id){ //Task 2
+		return state[getLeft(id)] != status.EATING && state[getRight(id)] != status.EATING;
+	}
 
-		if ( okToTalk && state[pIndex] == status.WantTalk){
-			state[pIndex] = status.Talking;
-			selfTalk[pIndex].signal();
+	public void testTalk(int id){ //Task 2
+		lock.lock();
+		if(noOneIsTalking() && state[id] == status.EUREKA){
+			state[id] = status.TALKING;
+			self[id].signal();
 		}
+		lock.unlock();
+	}
+
+	private boolean noOneIsTalking(){ //Task 2
+		for (int i = 0; i < state.length; i++){
+			if(state[i] == status.TALKING){
+				return false;
+			}
+		}
+		return true;
 	}
 }
 

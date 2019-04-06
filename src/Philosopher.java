@@ -1,5 +1,4 @@
 import common.BaseThread;
-import java.util.concurrent.Semaphore;
 
 /**
  * Class Philosopher.
@@ -9,10 +8,23 @@ import java.util.concurrent.Semaphore;
  */
 public class Philosopher extends BaseThread
 {
+	int priority;
 	/**
 	 * Max time an action can take (in milliseconds)
 	 */
 	public static final long TIME_TO_WASTE = 1000;
+
+	public Philosopher(int numPhil){
+		super();
+		this.priority = calculatePriority(getTID()-1, numPhil);
+	}
+
+	private int calculatePriority(int id, int numPhil){
+		if((id % 2) == 0){
+			return (int)((numPhil/2)*Math.random());
+		}
+		return (int)(((numPhil/2)*Math.random()) + numPhil/2);
+	}
 
 	/**
 	 * The act of eating.

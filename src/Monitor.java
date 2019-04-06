@@ -15,7 +15,8 @@ public class Monitor
 		HUNGRY,
 		EATING,
 		EUREKA,
-		TALKING
+		TALKING,
+		HASRIGHTSTICK
 	}
 	private Lock lock = new ReentrantLock();
 	private status[] state;
@@ -61,8 +62,8 @@ public class Monitor
 	 */
 	public void pickUp(final int id) throws InterruptedException//TASK 2 only eat if you have both forks
 	{
-		System.out.println("Philosopher " + id + " will try to pick up");
 		lock.lock();
+		System.out.println("Philosopher " + id + " will try to pick up");
 		state[id] = status.HUNGRY;
 		testEat(id);
 		if(state[id] != status.EATING){
@@ -115,17 +116,32 @@ public class Monitor
 
 	public void testEat(int id){  //Task 2
 		lock.lock();
-		if (bothChopsticksFree(id) && state[id] == status.HUNGRY)
+		if (bothChopsticksFree(id) && state[id] == status.HUNGRY || state[id] == status.HASRIGHTSTICK)
 		{
 			System.out.println("Philosopher " + id + " has passes test eat");
 			state[id] = status.EATING;
 			self[id].signal();
 		}
+		else if (allowedToTakeOneChopstick(id) && rightChopstickIsFree(id) &&  state[id] == status.HUNGRY)
+		{
+			System.out.println("Philosopher " + id + " has claimed right chopstick");
+			state[id] = status.HASRIGHTSTICK;
+		}
 		lock.unlock();
 	}
 
+	private boolean rightChopstickIsFree(int id){
+		return state[getRight(id)] != status.EATING;
+	}
+
+	private boolean allowedToTakeOneChopstick(int id){
+		return id % 2 == 0;
+	}
+
 	private boolean bothChopsticksFree(int id){ //Task 2
-		return state[getLeft(id)] != status.EATING && state[getRight(id)] != status.EATING;
+		return state[getLeft(id)] != status.EATING &&
+				state[getLeft(id)] != status.HASRIGHTSTICK &&
+				state[getRight(id)] != status.EATING;
 	}
 
 	public void testTalk(int id){ //Task 2

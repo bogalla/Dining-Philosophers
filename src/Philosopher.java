@@ -145,7 +145,7 @@ public class Philosopher extends BaseThread
 				 * A decision is made at random whether this particular
 				 * philosopher is about to say something terribly useful.
 				 */
-				if ((Math.random() * 100) % 3 == 0) {
+				if ((int)((Math.random() * 100) % 2) == 0) {
 					// Some monitor ops down here...
 					// no one is sleeping ... wait for wake up?
 					// no one is talking ... wait for done talking

@@ -22,6 +22,7 @@ public class Monitor
 	private status[] state;
 	private Condition[] self;
 	private int nbPhil;
+	private int nbFreeShakers = 2;
 
 	/**
 	 * Constructor
@@ -63,7 +64,6 @@ public class Monitor
 	public void pickUp(final int id) throws InterruptedException//TASK 2 only eat if you have both forks
 	{
 		lock.lock();
-		System.out.println("Philosopher " + id + " will try to pick up");
 		state[id] = status.HUNGRY;
 		testEat(id);
 		if(state[id] != status.EATING){
@@ -81,6 +81,12 @@ public class Monitor
 	{
 		lock.lock();
 		state[id] = status.THINKING;
+		nbFreeShakers++;
+		for(int i = 0; i < state.length; i++){
+			if(state[i] == status.HUNGRY){
+				testEat(i);
+			}
+		}
 		testEat(getLeft(id));
 		testEat(getRight(id));
 		lock.unlock();
@@ -105,7 +111,7 @@ public class Monitor
 	 * When one philosopher is done talking stuff, others
 	 * can feel free to start talking.
 	 */
-	public synchronized void endTalk(int id) //Task 2
+	public void endTalk(int id) //Task 2
 	{
 		lock.lock();
 		state[id] = status.THINKING;
@@ -116,10 +122,13 @@ public class Monitor
 
 	public void testEat(int id){  //Task 2
 		lock.lock();
-		if (bothChopsticksFree(id) && state[id] == status.HUNGRY || state[id] == status.HASRIGHTSTICK)
+		if (bothChopsticksFree(id) &&
+				(state[id] == status.HUNGRY || state[id] == status.HASRIGHTSTICK) &&
+				availbleShakers())
 		{
-			System.out.println("Philosopher " + id + " has passes test eat");
+			System.out.println("Philosopher " + id + " has passes test eat, takes shaker");
 			state[id] = status.EATING;
+			nbFreeShakers--;
 			self[id].signal();
 		}
 		else if (allowedToTakeOneChopstick(id) && rightChopstickIsFree(id) &&  state[id] == status.HUNGRY)
@@ -127,7 +136,15 @@ public class Monitor
 			System.out.println("Philosopher " + id + " has claimed right chopstick");
 			state[id] = status.HASRIGHTSTICK;
 		}
+		else if(!availbleShakers())
+		{
+			System.out.println(id +" tries, no shakers");
+		}
 		lock.unlock();
+	}
+
+	private boolean availbleShakers(){
+		return nbFreeShakers > 0;
 	}
 
 	private boolean rightChopstickIsFree(int id){

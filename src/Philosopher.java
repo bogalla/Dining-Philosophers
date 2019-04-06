@@ -64,11 +64,11 @@ public class Philosopher extends BaseThread
 	{
 		try
 		{
-			System.out.println("Philosopher " + (this.getTID()-1) + " has started THINKING"); //TASK 1 announcements and yields
+			//System.out.println("Philosopher " + (this.getTID()-1) + " has started THINKING"); //TASK 1 announcements and yields
 			yield();
 			sleep((long)(Math.random() * TIME_TO_WASTE));
 			yield();
-			System.out.println("Philosopher " + (this.getTID()-1) + " has stopped THINKING");
+			//System.out.println("Philosopher " + (this.getTID()-1) + " has stopped THINKING");
 		}
 		catch(InterruptedException e)
 		{
@@ -88,11 +88,11 @@ public class Philosopher extends BaseThread
 	 */
 	public void talk()
 	{
-		System.out.println("Philosopher " + (this.getTID()-1) + " has started TALKING"); //TASK 1 announcements and yields
+		//System.out.println("Philosopher " + (this.getTID()-1) + " has started TALKING"); //TASK 1 announcements and yields
 		yield();
 		saySomething();
 		yield();
-		System.out.println("Philosopher " + (this.getTID()-1) + " has stopped TALKING");
+		//System.out.println("Philosopher " + (this.getTID()-1) + " has stopped TALKING");
 	}
 
 	/**
@@ -107,11 +107,11 @@ public class Philosopher extends BaseThread
 	{
 		try
 		{
-			System.out.println("Philosopher " + (this.getTID()-1) + " has started sleeping");
+			//System.out.println("Philosopher " + (this.getTID()-1) + " has started sleeping");
 			yield();
 			sleep((long) (Math.random() * TIME_TO_WASTE));
 			yield();
-			System.out.println("Philosopher " + (this.getTID()-1) + " has finished sleeping");
+			//System.out.println("Philosopher " + (this.getTID()-1) + " has finished sleeping");
 		}
 		catch(InterruptedException e)
 		{
@@ -136,8 +136,6 @@ public class Philosopher extends BaseThread
 
 				DiningPhilosophers.soMonitor.putDown(getTID() - 1);
 
-				System.out.println("Philosopher " + (getTID()-1) + " has done eat, will think");
-
 				think();
 
 				/*
@@ -150,15 +148,11 @@ public class Philosopher extends BaseThread
 					// no one is sleeping ... wait for wake up?
 					// no one is talking ... wait for done talking
 
-					System.out.println("Philosopher " + (getTID()-1) + " has decided to talk");
-
 					DiningPhilosophers.talkingStick.requestTalk(getTID() - 1); //TASK 1 new monitor to allow talking
 
 					talk();
 
 					DiningPhilosophers.talkingStick.endTalk(getTID() - 1); //TASK 1 new monitor to end talking
-				} else {
-					System.out.println("Philosopher " + (getTID()-1) + " will not talk");
 				}
 
 				yield();

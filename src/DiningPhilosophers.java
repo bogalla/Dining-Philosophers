@@ -3,7 +3,6 @@
  * The main starter.
  *
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
- * also jun and bri
  */
 public class DiningPhilosophers
 {

@@ -14,10 +14,6 @@ public class Philosopher extends BaseThread
 	 */
 	public static final long TIME_TO_WASTE = 1000;
 
-	private Semaphore tb = new Semaphore(0);
-	private Semaphore mutex = new Semaphore(0);
-	private int sc = 0;
-
 	/**
 	 * The act of eating.
 	 * - Print the fact that a given phil (their TID) has started eating.
@@ -141,11 +137,16 @@ public class Philosopher extends BaseThread
 					// Some monitor ops down here...
 					// no one is sleeping ... wait for wake up?
 					// no one is talking ... wait for done talking
+
+					System.out.println("Philosopher " + (getTID()-1) + " has decided to talk");
+
 					DiningPhilosophers.talkingStick.requestTalk(getTID() - 1); //TASK 1 new monitor to allow talking
 
 					talk();
 
 					DiningPhilosophers.talkingStick.endTalk(getTID() - 1); //TASK 1 new monitor to end talking
+				} else {
+					System.out.println("Philosopher " + (getTID()-1) + " will not talk");
 				}
 
 				yield();
@@ -169,12 +170,12 @@ public class Philosopher extends BaseThread
 			"You know, true is false and false is true if you think of it",
 			"2 + 2 = 5 for extremely large values of 2...",
 			"If thee cannot speak, thee must be silent",
-			"My number is " + getTID() + ""
+			"My number is " + (getTID()-1) + ""
 		};
 
 		System.out.println
 		(
-			"Philosopher " + getTID() + " says: " +
+			"Philosopher " + (getTID()-1) + " says: " +
 			astrPhrases[(int)(Math.random() * astrPhrases.length)]
 		);
 	}

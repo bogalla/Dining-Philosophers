@@ -89,18 +89,28 @@ public class Monitor
 	 * Only one philosopher at a time is allowed to philosophy
 	 * (while she is not eating).
 	 */
-	public void requestTalk(int id) //TASK 2
+	public void requestTalk(int id) throws InterruptedException//TASK 2
 	{
-
+		lock.lock();
+		state[id] = status.EUREKA;
+		testTalk(id);
+		if(state[id] != status.TALKING){
+			self[id].await();
+		}
+		lock.unlock();
 	}
 
 	/**
 	 * When one philosopher is done talking stuff, others
 	 * can feel free to start talking.
 	 */
-	public synchronized void endTalk(int id)
+	public synchronized void endTalk(int id) //Task 2
 	{
-
+		lock.lock();
+		state[id] = status.THINKING;
+		testTalk(getLeft(id));
+		testTalk(getRight(id));
+		lock.unlock();
 	}
 
 	public void testEat(int id){  //Task 2
@@ -114,10 +124,27 @@ public class Monitor
 		lock.unlock();
 	}
 
-	private boolean bothChopsticksFree(int id){
+	private boolean bothChopsticksFree(int id){ //Task 2
 		return state[getLeft(id)] != status.EATING && state[getRight(id)] != status.EATING;
 	}
 
+	public void testTalk(int id){ //Task 2
+		lock.lock();
+		if(noOneIsTalking() && state[id] == status.EUREKA){
+			state[id] = status.TALKING;
+			self[id].signal();
+		}
+		lock.unlock();
+	}
+
+	private boolean noOneIsTalking(){ //Task 2
+		for (int i = 0; i < state.length; i++){
+			if(state[i] == status.TALKING){
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 // EOF

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d625edd0-b31a-4600-aa0e-a240c41bb283" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/Monitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Philosopher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Philosopher.java" afterDir="false" />
-    </list>
+    <list default="true" id="d625edd0-b31a-4600-aa0e-a240c41bb283" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +22,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Philosopher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="172" column="42" selection-start-line="172" selection-start-column="42" selection-end-line="172" selection-end-column="42" />
+            <state relative-caret-position="89">
+              <caret line="135" column="50" selection-start-line="135" selection-start-column="50" selection-end-line="135" selection-end-column="50" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -46,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Monitor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-13">
-              <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
+            <state relative-caret-position="939">
+              <caret line="79" column="5" lean-forward="true" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#746#747#0" expanded="true" />
@@ -93,7 +90,6 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/DiningPhilosophers.java" />
         <option value="$PROJECT_DIR$/src/Monitor.java" />
-        <option value="$PROJECT_DIR$/src/Philosopher.java" />
       </list>
     </option>
   </component>
@@ -130,7 +126,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554581693576" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554581832424" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -189,7 +185,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8357000" />
+    <option name="totallyTimeSpent" value="8605000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1233" height="735" extended-state="6" />
@@ -204,7 +200,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34991708" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.21393035" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.49253732" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -283,26 +279,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Monitor.java">
+    <entry file="file://$PROJECT_DIR$/src/Philosopher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13">
-          <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
+        <state relative-caret-position="89">
+          <caret line="135" column="50" selection-start-line="135" selection-start-column="50" selection-end-line="135" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+     <entry file="file://$PROJECT_DIR$/src/Monitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="939">
+          <caret line="79" column="5" lean-forward="true" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#746#747#0" expanded="true" />
             <element signature="e#784#785#0" expanded="true" />
             <element signature="e#784#785#0" expanded="true" />
             <element signature="e#826#827#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Philosopher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="172" column="42" selection-start-line="172" selection-start-column="42" selection-end-line="172" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

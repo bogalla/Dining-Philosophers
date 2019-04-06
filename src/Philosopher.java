@@ -30,11 +30,11 @@ public class Philosopher extends BaseThread
 	{
 		try
 		{
-			System.out.println("Philosopher " + this.iTID + " has started EATING"); //TASK 1 announcements and yields
+			System.out.println("Philosopher " + (this.getTID()-1) + " has started EATING"); //TASK 1 announcements and yields
 			this.randomYield();
 			sleep((long)(Math.random() * TIME_TO_WASTE));
 			this.randomYield();
-			System.out.println("Philosopher " + this.iTID + " has stopped EATING");
+			System.out.println("Philosopher " + (this.getTID()-1) + " has stopped EATING");
 		}
 		catch(InterruptedException e)
 		{
@@ -56,11 +56,11 @@ public class Philosopher extends BaseThread
 	{
 		try
 		{
-			System.out.println("Philosopher " + this.iTID + " has started THINKING"); //TASK 1 announcements and yields
+			System.out.println("Philosopher " + (this.getTID()-1) + " has started THINKING"); //TASK 1 announcements and yields
 			yield();
 			sleep((long)(Math.random() * TIME_TO_WASTE));
 			yield();
-			System.out.println("Philosopher " + this.iTID + " has stopped THINKING");
+			System.out.println("Philosopher " + (this.getTID()-1) + " has stopped THINKING");
 		}
 		catch(InterruptedException e)
 		{
@@ -80,11 +80,11 @@ public class Philosopher extends BaseThread
 	 */
 	public void talk()
 	{
-		System.out.println("Philosopher " + this.iTID + " has started TALKING"); //TASK 1 announcements and yields
+		System.out.println("Philosopher " + (this.getTID()-1) + " has started TALKING"); //TASK 1 announcements and yields
 		yield();
 		saySomething();
 		yield();
-		System.out.println("Philosopher " + this.iTID + " has stopped TALKING");
+		System.out.println("Philosopher " + (this.getTID()-1) + " has stopped TALKING");
 	}
 
 	/**
@@ -99,11 +99,11 @@ public class Philosopher extends BaseThread
 	{
 		try
 		{
-			System.out.println("Philosopher " + this.getTID() + " has started sleeping");
+			System.out.println("Philosopher " + (this.getTID()-1) + " has started sleeping");
 			yield();
 			sleep((long) (Math.random() * TIME_TO_WASTE));
 			yield();
-			System.out.println("Philosopher " + this.getTID() + " has finished sleeping");
+			System.out.println("Philosopher " + (this.getTID()-1) + " has finished sleeping");
 		}
 		catch(InterruptedException e)
 		{
@@ -120,34 +120,40 @@ public class Philosopher extends BaseThread
 	 */
 	public void run()
 	{
-		for(int i = 0; i < DiningPhilosophers.DINING_STEPS; i++)
-		{
-			DiningPhilosophers.soMonitor.pickUp(getTID()-1);
+		try {
+			for (int i = 0; i < DiningPhilosophers.DINING_STEPS; i++) {
+				DiningPhilosophers.soMonitor.pickUp(getTID() - 1);
 
-			eat();
+				eat();
 
-			DiningPhilosophers.soMonitor.putDown(getTID()-1);
+				DiningPhilosophers.soMonitor.putDown(getTID() - 1);
 
-			think();
+				System.out.println("Philosopher " + (getTID()-1) + " has done eat, will think");
 
-			/*
-			 * TODO:
-			 * A decision is made at random whether this particular
-			 * philosopher is about to say something terribly useful.
-			 */
-			if((Math.random() * 100) % 3 == 0)
-			{
-				// Some monitor ops down here...
-				// no one is sleeping ... wait for wake up?
-				// no one is talking ... wait for done talking
-				DiningPhilosophers.talkingStick.requestTalk(getTID()-1); //TASK 1 new monitor to allow talking
+				think();
 
-				talk();
+				/*
+				 * TODO:
+				 * A decision is made at random whether this particular
+				 * philosopher is about to say something terribly useful.
+				 */
+				if ((Math.random() * 100) % 3 == 0) {
+					// Some monitor ops down here...
+					// no one is sleeping ... wait for wake up?
+					// no one is talking ... wait for done talking
+					DiningPhilosophers.talkingStick.requestTalk(getTID() - 1); //TASK 1 new monitor to allow talking
 
-				DiningPhilosophers.talkingStick.endTalk(getTID()-1); //TASK 1 new monitor to end talking
+					talk();
+
+					DiningPhilosophers.talkingStick.endTalk(getTID() - 1); //TASK 1 new monitor to end talking
+				}
+
+				yield();
 			}
-
-			yield();
+		}
+		catch(InterruptedException e)
+		{
+			System.out.println(e.getMessage());
 		}
 	} // run()
 

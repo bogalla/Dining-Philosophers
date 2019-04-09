@@ -25,6 +25,7 @@ public class Monitor
 	private status[] state;
 	private Condition[] self;
 	private int nbPhil;
+	private int nbShakers = 2;
 
 	/**
 	 * Constructor
@@ -34,15 +35,12 @@ public class Monitor
 		this.nbPhil = nbPhil;
 		this.state = new status[nbPhil];
 		this.self = new Condition[nbPhil];
-		System.out.println("in the constructor!!");
 		for(int i = 0; i < state.length; i++){
 			this.state[i] = status.BULLSHIT;
 			this.self[i] = lock.newCondition();
 		}
 		// TODO: set appropriate number of chopsticks based on the # of philosophers
 	}
-
-
 
 	/*
 	 * -------------------------------
@@ -75,20 +73,25 @@ public class Monitor
 	{
 		lock.lock();
 		state[id] = status.THINKING;
-		testEat(getLeft(id));
-		testEat(getRight(id));
+		nbShakers++;
+		for(int i = 0; i < state.length; i++){
+			testEat(i);
+		}
 		lock.unlock();
 	}
 
 	public void testEat(int id){  //Task 2
 		lock.lock();
-		if (bothChopsticksFree(id) && state[id] == status.HUNGRY || state[id] == status.HASRIGHTSTICK)
+		if (bothChopsticksFree(id) &&
+				(state[id] == status.HUNGRY || state[id] == status.HASRIGHTSTICK) &&
+				availableShakers())
 		{
 			System.out.println("Philosopher " + id + " has passes test eat");
 			state[id] = status.EATING;
+			nbShakers--;
 			self[id].signal();
 		}
-		else if (allowedToTakeOneChopstick(id) && rightChopstickIsFree(id) &&  state[id] == status.HUNGRY)
+		else if (allowedToTakeOneChopstick(id) && rightChopstickIsFree(id) && state[id] == status.HUNGRY)
 		{
 			System.out.println("Philosopher " + id + " has claimed right chopstick");
 			state[id] = status.HASRIGHTSTICK;
@@ -276,6 +279,10 @@ public class Monitor
 
 	private int getLeft(int id){
 		return (id > 0) ? id - 1 : nbPhil - 1;
+	}
+
+	private boolean availableShakers(){
+		return nbShakers > 0;
 	}
 
 }

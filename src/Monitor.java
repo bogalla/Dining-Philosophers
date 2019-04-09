@@ -18,7 +18,8 @@ public class Monitor
 		TALKING,
 		HASRIGHTSTICK,
 		SLEEPY,
-		SLEEPING
+		SLEEPING,
+		BULLSHIT
 	}
 	private Lock lock = new ReentrantLock();
 	private status[] state;
@@ -31,18 +32,17 @@ public class Monitor
 	public Monitor(int nbPhil)
 	{
 		this.nbPhil = nbPhil;
-		state = new status[nbPhil];
-		self = new Condition[nbPhil];
-		init();
+		this.state = new status[nbPhil];
+		this.self = new Condition[nbPhil];
+		System.out.println("in the constructor!!");
+		for(int i = 0; i < state.length; i++){
+			this.state[i] = status.BULLSHIT;
+			this.self[i] = lock.newCondition();
+		}
 		// TODO: set appropriate number of chopsticks based on the # of philosophers
 	}
 
-	private void init(){
-		for(int i = 0; i < state.length; i++){
-			state[i] = status.THINKING;
-			self[i] = lock.newCondition();
-		}
-	}
+
 
 	/*
 	 * -------------------------------
@@ -136,13 +136,20 @@ public class Monitor
 		{
 			System.out.println("no one is sleeping");
 		}
+		if(noOneIsTalking())
+		{
+			System.out.println("no one is talking");
+			//printAllStates();
+		}
 		if(noOneIsTalking() && state[id] == status.EUREKA && noOneisSleeping()){
 			state[id] = status.TALKING;
+			System.out.println(id+" is talking");
+			//printAllStates();
 			self[id].signal();
 		}
 		else if(!noOneisSleeping())
 		{
-			System.out.println("someone is sleeping, "+ id +" will wait to talk=========================");
+			System.out.println("Someone is SLEEPING, "+ id +" will wait to talk");
 		}
 
 		lock.unlock();
@@ -155,7 +162,7 @@ public class Monitor
 			state[id] = status.SLEEPY;
 			testSleep(id);
 			if (state[id] != status.SLEEPING) {
-				System.out.println(id + ": someone is taking, i will wait to sleep~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				System.out.println("Someone is taking,"+ id+" will wait to sleep");
 				self[id].await();
 			}
 		}
@@ -211,7 +218,8 @@ public class Monitor
 	private void signalSomeoneToTalk() {
 		for (int i = 0; i < state.length; i++) {
 			if (state[i] == status.EUREKA) {
-				self[i].signal();
+				testTalk(i);
+				return;
 			}
 		}
 	}
@@ -249,7 +257,7 @@ public class Monitor
 	private boolean noOneisSleeping(){ //Task 2
 		for (int i = 0; i < state.length; i++){
 			if(state[i] == status.SLEEPING){
-				//System.out.println(i + " is sleeping!!!!");
+
 				return false;
 			}
 		}

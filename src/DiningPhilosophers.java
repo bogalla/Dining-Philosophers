@@ -15,11 +15,7 @@ public class DiningPhilosophers
 	/**
 	 * This default may be overridden from the command line
 	 */
-<<<<<<< HEAD
 	public static final int DEFAULT_NUMBER_OF_PHILOSOPHERS = 8;
-=======
-	public static final int DEFAULT_NUMBER_OF_PHILOSOPHERS = 10;
->>>>>>> 1c7af581a64f631af9dbcc9c2652fe8181c098f7
 
 	/**
 	 * Dining "iterations" per philosopher thread

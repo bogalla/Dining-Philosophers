@@ -88,11 +88,21 @@ public class Philosopher extends BaseThread
 	 */
 	public void talk()
 	{
+		try
+		{
 		System.out.println("Philosopher " + (this.getTID()-1) + " has started TALKING"); //TASK 1 announcements and yields
 		yield();
 		saySomething();
+		sleep((long)(Math.random() * TIME_TO_WASTE));
 		yield();
 		System.out.println("Philosopher " + (this.getTID()-1) + " has stopped TALKING");
+		}
+			catch(InterruptedException e)
+		{
+			System.err.println("Philosopher.think(): ");
+			DiningPhilosophers.reportException(e);
+			System.exit(1);
+		}
 	}
 
 	/**
@@ -136,7 +146,13 @@ public class Philosopher extends BaseThread
 
 				DiningPhilosophers.soMonitor.putDown(getTID() - 1);
 
-				System.out.println("Philosopher " + (getTID()-1) + " has done eat, will think");
+				System.out.println("Philosopher " + (getTID()-1) + " has done eat, will sleep");
+
+				DiningPhilosophers.soMonitor.requestSleep(getTID()-1);
+
+				philSleep();
+
+				DiningPhilosophers.soMonitor.endSleep(getTID()-1);
 
 				think();
 
@@ -151,19 +167,12 @@ public class Philosopher extends BaseThread
 					// no one is sleeping ... wait for wake up?
 					// no one is talking ... wait for done talking
 
-					DiningPhilosophers.talkingStick.requestTalk(getTID() - 1); //TASK 1 new monitor to allow talking
+					DiningPhilosophers.soMonitor.requestTalk(getTID() - 1); //TASK 1 new monitor to allow talking
 
 					talk();
 
-					DiningPhilosophers.talkingStick.endTalk(getTID() - 1); //TASK 1 new monitor to end talking
+					DiningPhilosophers.soMonitor.endTalk(getTID() - 1); //TASK 1 new monitor to end talking
 				}
-
-
-				DiningPhilosophers.soMonitor.requestSleep(getTID()-1);
-
-				philSleep();
-
-				DiningPhilosophers.soMonitor.endSleep(getTID()-1);
 
 				yield();
 			}

@@ -21,7 +21,7 @@ public class DiningPhilosophers
 	 * Dining "iterations" per philosopher thread
 	 * while they are socializing there
 	 */
-	public static final int DINING_STEPS = 4;
+	public static final int DINING_STEPS = 2;
 
 	/**
 	 * Our shared monitor for the philosphers to consult
@@ -56,7 +56,6 @@ public class DiningPhilosophers
 
 			// Make the monitor aware of how many philosophers there are
 			soMonitor = new Monitor(iPhilosophers);
-			talkingStick = new Monitor(iPhilosophers); //TASK 1 new monitor to allow talking
 
 			// Space for all the philosophers
 			Philosopher aoPhilosophers[] = new Philosopher[iPhilosophers];

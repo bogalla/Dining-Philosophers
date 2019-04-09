@@ -27,7 +27,6 @@ public class DiningPhilosophers
 	 * Our shared monitor for the philosphers to consult
 	 */
 	public static Monitor soMonitor = null;
-	public static Monitor talkingStick = null; //TASK 1 new monitor to allow talking
 
 	/*
 	 * -------

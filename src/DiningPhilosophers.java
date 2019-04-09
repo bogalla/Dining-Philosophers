@@ -15,13 +15,17 @@ public class DiningPhilosophers
 	/**
 	 * This default may be overridden from the command line
 	 */
+<<<<<<< HEAD
 	public static final int DEFAULT_NUMBER_OF_PHILOSOPHERS = 8;
+=======
+	public static final int DEFAULT_NUMBER_OF_PHILOSOPHERS = 10;
+>>>>>>> 1c7af581a64f631af9dbcc9c2652fe8181c098f7
 
 	/**
 	 * Dining "iterations" per philosopher thread
 	 * while they are socializing there
 	 */
-	public static final int DINING_STEPS = 1;
+	public static final int DINING_STEPS = 2;
 
 	/**
 	 * Our shared monitor for the philosphers to consult
@@ -56,7 +60,6 @@ public class DiningPhilosophers
 
 			// Make the monitor aware of how many philosophers there are
 			soMonitor = new Monitor(iPhilosophers);
-			talkingStick = new Monitor(iPhilosophers); //TASK 1 new monitor to allow talking
 
 			// Space for all the philosophers
 			Philosopher aoPhilosophers[] = new Philosopher[iPhilosophers];

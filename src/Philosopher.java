@@ -88,11 +88,29 @@ public class Philosopher extends BaseThread
 	 */
 	public void talk()
 	{
+<<<<<<< HEAD
 		//System.out.println("Philosopher " + (this.getTID()-1) + " has started TALKING"); //TASK 1 announcements and yields
+=======
+		try
+		{
+		System.out.println("Philosopher " + (this.getTID()-1) + " has started TALKING"); //TASK 1 announcements and yields
+>>>>>>> 1c7af581a64f631af9dbcc9c2652fe8181c098f7
 		yield();
 		saySomething();
+		sleep((long)(Math.random() * TIME_TO_WASTE));
 		yield();
+<<<<<<< HEAD
 		//System.out.println("Philosopher " + (this.getTID()-1) + " has stopped TALKING");
+=======
+		System.out.println("Philosopher " + (this.getTID()-1) + " has stopped TALKING");
+		}
+			catch(InterruptedException e)
+		{
+			System.err.println("Philosopher.think(): ");
+			DiningPhilosophers.reportException(e);
+			System.exit(1);
+		}
+>>>>>>> 1c7af581a64f631af9dbcc9c2652fe8181c098f7
 	}
 
 	/**
@@ -103,15 +121,23 @@ public class Philosopher extends BaseThread
 	 * - yield
 	 * - The print that they are done sleeping.
 	 */
-	public void philSleep() //received but unsure how to implement
+	public void philSleep()
 	{
 		try
 		{
+<<<<<<< HEAD
 			//System.out.println("Philosopher " + (this.getTID()-1) + " has started sleeping");
 			yield();
 			sleep((long) (Math.random() * TIME_TO_WASTE));
 			yield();
 			//System.out.println("Philosopher " + (this.getTID()-1) + " has finished sleeping");
+=======
+			System.out.println("Philosopher " + (this.getTID()-1) + " has started SLEEPING");
+			yield();
+			sleep((long) (Math.random() * TIME_TO_WASTE));
+			yield();
+			System.out.println("Philosopher " + (this.getTID()-1) + " has finished SLEEPING");
+>>>>>>> 1c7af581a64f631af9dbcc9c2652fe8181c098f7
 		}
 		catch(InterruptedException e)
 		{
@@ -136,6 +162,17 @@ public class Philosopher extends BaseThread
 
 				DiningPhilosophers.soMonitor.putDown(getTID() - 1);
 
+<<<<<<< HEAD
+=======
+				System.out.println("Philosopher " + (getTID()-1) + " has done eat, will sleep");
+
+				DiningPhilosophers.soMonitor.requestSleep(getTID()-1);
+
+				philSleep();
+
+				DiningPhilosophers.soMonitor.endSleep(getTID()-1);
+
+>>>>>>> 1c7af581a64f631af9dbcc9c2652fe8181c098f7
 				think();
 
 				/*
@@ -143,16 +180,25 @@ public class Philosopher extends BaseThread
 				 * A decision is made at random whether this particular
 				 * philosopher is about to say something terribly useful.
 				 */
-				if ((int)((Math.random() * 100) % 2) == 0) {
+				/*(int)((Math.random() * 100) % 2) == 0*/
+				if (true) {
 					// Some monitor ops down here...
 					// no one is sleeping ... wait for wake up?
 					// no one is talking ... wait for done talking
 
+<<<<<<< HEAD
 					DiningPhilosophers.talkingStick.requestTalk(getTID() - 1); //TASK 1 new monitor to allow talking
 
 					talk();
 
 					DiningPhilosophers.talkingStick.endTalk(getTID() - 1); //TASK 1 new monitor to end talking
+=======
+					DiningPhilosophers.soMonitor.requestTalk(getTID() - 1); //TASK 1 new monitor to allow talking
+
+					talk();
+
+					DiningPhilosophers.soMonitor.endTalk(getTID() - 1); //TASK 1 new monitor to end talking
+>>>>>>> 1c7af581a64f631af9dbcc9c2652fe8181c098f7
 				}
 
 				yield();
